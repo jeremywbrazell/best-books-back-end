@@ -8,12 +8,11 @@ const app = express();
 app.use(cors());
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-});
 
 
 const silence = new User({ email: 'Silence' });
@@ -46,14 +45,19 @@ const everyoneweknow = new User({
 console.log(you, everyoneweknow);
 everyoneweknow.save();
 
+
+
+});
+
+
 app.get('/books', getBooks);
 
 async function getBooks(request, response) {
-    const name = request.query.email
+    const name = request.query.email;
     await User.find({email: name}, function(err, books){
-        if (err)console.error(err)
+        if (err){console.error(err)};
         response.status(200).send(books.books)
-    })
+    }).catch(err => {console.error(err)})
 }
 const PORT = process.env.PORT || 3002;
 
