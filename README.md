@@ -34,7 +34,7 @@ Name of feature: __________Start______________________
 
 Estimate of time needed to complete: __1 hr__
 
-Start time: __2:00___
+Start time: __3:00___
 
 Finish time: _____
 
