@@ -1,10 +1,11 @@
 'use strict'
 const mongoose = require('mongoose');
 const booksSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    status: String
+    name: {type: String, required: true},
+    description: {type: String, required: true},
+    status: {type: String, required: true}
 });
+
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true },
     books: [booksSchema]
