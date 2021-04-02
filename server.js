@@ -62,6 +62,22 @@ async function getBooks(request, response) {
     })
     // .catch(error => {console.error(error)});
 }
+
+async function deleteBook (request, response) {
+    const name=request.query.email;
+    const badBook=parseInt(request.query.index);
+    console.log('deleting', request);
+    await User.find({email: name}, function(err, list){
+        if (err) return console.error(err);
+       const newArray = list.books.filter((book, i) => {
+           return i !== badBook;
+       })
+       list.books=newArray
+       list.save();
+       response.status(200).send('success -- you have deleted a book!');
+
+    })
+}
 function createBook(request, response) {
     const book = request.body.aBook;
     console.log(book);
@@ -78,7 +94,7 @@ function createBook(request, response) {
     })
 }
 app.post('/books', createBook);
-// app.delete('/books/:id', deleteBook);
+app.delete('/books/:id', deleteBook);
 
 const PORT = process.env.PORT || 3002;
 
