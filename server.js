@@ -8,6 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
+
 const mongoose = require('mongoose');
 mongoose.connect(process.env.ATLAS_CONN, { 
     dbName: "BestBooksDev",
@@ -16,7 +17,7 @@ mongoose.connect(process.env.ATLAS_CONN, {
     pass: "Postman1234",
     useNewUrlParser: true, 
     useUnifiedTopology: true,
-    // useFindAndModify: false 
+    useFindAndModify: false 
 })
 .then(()=>{
 console.log(`Mongo connected to atlus?!`)})
@@ -30,7 +31,7 @@ db.once('open', function () {
 async function getBooks(request, response) {
     const name = request.query.email;
 console.log('getting: ', name)
-    await User.find({email: name.email}, function (err, books){
+    await User.find({email: name}, function (err, books){
         if (err)return console.error(err);
  console.log('name: ', name);
         response.status(200).send(books);
@@ -38,12 +39,10 @@ console.log('getting: ', name)
 }
 
 async function posty(req, res){
-    const data = req.query.book;
+    const data = req.query.index;
     const own = req.query.email;
-    await User.find({own}, (err, itm)=>{
+    await User.findOneAndUpdate({email: own},{data}, (err, itm)=>{
         if(err) return console.error(err);
-        itm.books.push({name: data.name, description: book.description, status: book.status })
-        itm.save()
         res.status(200).send(itm.books)
     }) 
 }
@@ -82,7 +81,7 @@ app.get('/', function (req, res){
 
 app.get('/books', getBooks);
 app.post('/books', posty);
-app.delete('/books', killer);
+app.delete('/books/:id', killer);
 // app.put('/books', putter)
 
 
