@@ -41,15 +41,31 @@ db.once('open', function () {
             status: 'in'
         }]
     })
+
+    const andme = new User({
+        email: 'julienwedwards@gmail.com',
+        books: [{
+            name: 'you wanna hear a',
+            description: 'secret',
+            status: 'hush'
+            },
+            {   
+                name: 'you wanna hear a',
+                description: 'secret',
+                status: 'hush'
+            },
+            {
+                name: 'you wanna hear a',
+                description: 'secret',
+                status: 'hush'
+                },]
+    })
     console.log(you, everyoneweknow);
     everyoneweknow.save();
+    andme.save();
 });
 
 
-const silence = new User({ email: 'Silence' });
-silence.save();
-
-console.log(silence.email); // 'Silence'
 app.use(express.json());
 app.get('/books', getBooks);
 
@@ -57,7 +73,7 @@ async function getBooks(request, response) {
     const name = request.query.email;
     await User.find({ email: name }, function (err, books) {
         if (err) return console.error(err);
-        console.log(name);
+        console.log('get books name: ', name);
         response.status(200).send(books);
     })
     // .catch(error => {console.error(error)});
@@ -79,18 +95,19 @@ async function deleteBook (request, response) {
     })
 }
 function createBook(request, response) {
-    const book = request.body.aBook;
+    const book = request.query.aBook;
     console.log(book);
-    const email = request.body.email;
+    const email = request.query.email;
     console.log('email', email);
     // const newBook = { name: book.name, description: book.description, status: book.status }
     User.findOne({ email }, (err, entry) => {
         console.log('testing for something', entry);
-        console.log(book);
+        console.log('testing for book', book);
         if (err) return console.error('Something went wrong', err);
-        entry.books.push({ name: book.name, description: book.description, status: book.status })
+        // const get = entry
+        entry.books=[...entry.books, { name: book.bookName, description: book.bookDescription, status: book.bookStatus }]
         entry.save();
-        response.status(200).send(entry.books);
+        response.status(200).send(entry);
     })
 }
 app.post('/books', createBook);
